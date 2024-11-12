@@ -1,10 +1,12 @@
-@ -1,70 +0,0 @@
 <template>
   <LoggedInContent v-if="isLoggedIn" />
   <GuestContent v-else />
   <Uploadfile />
   <button @click="getData">跨越请求</button>
   <button @click="logout">退出登录</button>
+<!-- 登录状态切换组件 -->
+    <button @click="router().push('/login')">前往登录</button>
+
 </template>
 
 <script>
@@ -15,11 +17,17 @@ import LoggedInContent from '@/views/role/LoggedInContent.vue';
 import GuestContent from '@/views/role/GuestContent.vue';
 
 import Uploadfile from '@/views/sys/Uploadfile.vue';
+import router from "@/router";
 
 
 
 export default {
   name: 'Home',
+    methods: {
+        router() {
+            return router
+        }
+    },
   components: {
     LoggedInContent,
     GuestContent,
@@ -43,7 +51,7 @@ export default {
     });
 
     const getData = async () => {
-      const res = await axios.get('api/user/2');
+      const res = await axios.get('/api/user/2');
       console.log(res);
     };
 
