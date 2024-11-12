@@ -7,9 +7,9 @@ spring:
     name: mediavault
 
   datasource:
-    url: jdbc:mysql://103.207.68.161:3310/mediavault?serverTimezone=GMT%2B8&characterEncoding=utf-8&useSSL=false
+    url: jdbc:mysql://172.10.10.2:3306/mediavault?serverTimezone=GMT%2B8&characterEncoding=utf-8&useSSL=false
     username: root
-    password: sdQPzCLPc2
+    password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
 
 s3:

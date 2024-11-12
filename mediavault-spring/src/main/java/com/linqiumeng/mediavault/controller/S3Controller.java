@@ -16,7 +16,7 @@ import software.amazon.awssdk.services.s3.presigner.model.PresignedPutObjectRequ
 import java.time.Duration;
 
 @RestController
-@RequestMapping("/api")
+//@RequestMapping("/api")
 public class S3Controller {
 
     @Autowired
