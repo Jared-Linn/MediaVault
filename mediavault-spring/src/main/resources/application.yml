@@ -1,0 +1,20 @@
+# ????????????????API
+
+
+
+spring:
+  application:
+    name: mediavault
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/mediavault?serverTimezone=GMT%2B8&characterEncoding=utf-8&useSSL=false
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+s3:
+  endpoint: https://s3.bitiful.net
+  access-key-id: YNzWbwszRG5y36On9D6LqOWc
+  secret-access-key: hFK4X1bSrycg04pEABdSLd1ssttC2Vb
+  bucket: fafa
+
