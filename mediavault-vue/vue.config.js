@@ -10,11 +10,11 @@ module.exports = defineConfig({
     // 配置代理解决跨域
     proxy: {
       '/api': {
-        target: 'http://localhost:8080',
+        target: 'http://172.10.30.20:8080',
         changeOrigin: true,
-        // pathRewrite: {
-        //   '^/api': ''
-        // }
+        pathRewrite: {
+          '^/api': ''
+        }
       }
     }
   }
