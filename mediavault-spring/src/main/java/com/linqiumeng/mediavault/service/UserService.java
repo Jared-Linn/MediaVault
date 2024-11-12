@@ -17,26 +17,6 @@ public class UserService {
     @Autowired
     private UserMapper userMapper;
 
-    // 分页查询 - 根据 页码和每页记录数
-//    public Page<User> findByPage(Integer pageNum, Integer pageSize) {
-//        // 计算分页查询的偏移量
-//        int offset = (pageNum - 1) * pageSize;
-//
-//        try {
-//            // 查询分页数据
-//            List<User> users = userMapper.findByPage(offset, pageSize);
-//
-//            // 获取总记录数
-//            int total = userMapper.getTotalUserCount();
-//
-//            // 创建 Page 对象并设置属性
-//            return new Page<>(pageNum, pageSize, total, users);
-//        } catch (Exception e) {
-//            // 处理异常，返回空结果或抛出自定义异常
-//            e.printStackTrace();
-//            return new Page<>(pageNum, pageSize, 0, null);
-//        }
-//    }
 
     // 分页查询 - 根据分页查询的数据 进行 模糊查询
     public Page<User> findByPageAndConditions(UserQueryParams params) {
