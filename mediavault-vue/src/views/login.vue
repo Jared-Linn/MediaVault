@@ -134,35 +134,30 @@ const rules = reactive({
 
 const router = useRouter()
 
-const login = async () => { // 将 login 函数声明为异步函数
-  try {
-    const response = await axios.post('api/login', {
-      name: loginForm.username,
-      password: loginForm.password
-    });
 
-    if (response.data.code === 200) {
-      // 登录成功
-      console.log('登录成功:', response.data);
-      // 获取返回的 Token
-      const token = response.data.token; 
-      // 打印
-       console.log('Token:', token);
+const login = async () => {
+    try {
+        const response = await axios.post('http://172.10.10.2/api/login', {
+            name: loginForm.username,
+            password: loginForm.password
+        });
 
-      // 将 Token 存储在 localStorage 中
-      localStorage.setItem('token', token);
 
-      // 可以在这里进行页面跳转或其他操作
-      router.push('/home'); 
-    } else {
-      // 处理其他状态码
-      console.error('登录失败:', response.data.message);
-      ElMessage.error(response.data.message); // 使用 Element Plus 的消息提示
+        if (response.data.code === 200) {
+            // 登录成功
+            console.log('登录成功:', response.data);
+            const token = response.data.token;
+            console.log('Token:', token);
+            localStorage.setItem('token', token);
+            await router.push('/home');
+        } else {
+            console.error('登录失败:', response.data.message);
+            ElMessage.error(response.data.message);
+        }
+    } catch (error) {
+        console.error('请求失败:', error);
+        ElMessage.error('请求失败，请稍后再试');
     }
-  } catch (error) {
-    console.error('请求失败:', error);
-    ElMessage.error('请求失败，请稍后再试'); // 使用 Element Plus 的消息提示
-  }
 };
 
 
