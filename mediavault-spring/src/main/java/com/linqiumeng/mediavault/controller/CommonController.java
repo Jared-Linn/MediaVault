@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Map;
 import java.util.UUID;
@@ -64,10 +65,12 @@ public class CommonController {
             // 保存文件信息到数据库
             FileEntity fileEntity = new FileEntity();
             fileEntity.setFileName(originalFilename);
-            fileEntity.setFileKey((String) uploadResult.get("objectName"));
+            fileEntity.setFileKey(objectName);
             fileEntity.setFileSize(file.getSize());
             fileEntity.setContentType(file.getContentType());
             fileEntity.setStatus("uploaded");
+            fileEntity.setDataurl(filePath); // 添加 dataurl 字段
+            fileEntity.setUserId(1); // 假设用户ID为1，实际应用中应从上下文中获取
             fileRepository.save(fileEntity);
 
             return Result.success(filePath);

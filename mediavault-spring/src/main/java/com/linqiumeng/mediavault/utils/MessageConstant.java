@@ -7,8 +7,8 @@ public class MessageConstant {
     public static final String UPLOAD_FAILED = "文件上传失败";
     public static final String SUCCESS = "操作成功";
     public static final String FAILURE = "操作失败";
+    public static final String INVALID_FILE_NAME = "文件名无效";
+    public static final String INVALID_FILE_EXTENSION = "文件扩展名无效";
     // 其他常量消息
 
-    public static final String INVALID_FILE_NAME = "Invalid file name";
-    public static final String INVALID_FILE_EXTENSION = "Invalid file extension";
 }
