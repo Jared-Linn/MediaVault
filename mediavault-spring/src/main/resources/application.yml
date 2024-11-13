@@ -22,8 +22,8 @@ spring:
 
   servlet:
     multipart:
-      max-file-size: 200MB
-      max-request-size: 200MB
+      max-file-size: 5GB
+      max-request-size: 5GB
 
 
   #本地配置
