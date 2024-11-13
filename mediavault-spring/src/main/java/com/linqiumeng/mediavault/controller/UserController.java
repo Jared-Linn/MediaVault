@@ -1,5 +1,7 @@
 package com.linqiumeng.mediavault.controller;
 
+import com.linqiumeng.mediavault.dto.ApiResponse;
+import com.linqiumeng.mediavault.dto.ApiResponseToken;
 import com.linqiumeng.mediavault.entity.User;
 import com.linqiumeng.mediavault.exception.ResourceNotFoundException;
 import com.linqiumeng.mediavault.mapper.UserMapper;
@@ -8,6 +10,7 @@ import com.linqiumeng.mediavault.vo.Page;
 import com.linqiumeng.mediavault.vo.UserQueryParams;
 
 import jakarta.annotation.Resource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -31,17 +34,18 @@ public class UserController {
 
     // 根据Id查询用户
     @GetMapping("/{id}")
-    public User findById(@PathVariable Integer id) {
+    public ResponseEntity<ApiResponse<?>> findById(@PathVariable Integer id) {
         User user = userMapper.findById(id);
         if (user == null) {
             throw new ResourceNotFoundException("用户未找到，ID: " + id);
         }
-        return user;
+        return ResponseEntity.ok(ApiResponse.success(user));
+
     }
 
     // 分页查询
     @GetMapping("/list")
-    public Page<User> findByPage(@RequestParam(defaultValue = "1") @Min(1) Integer pageNum,
+    public ResponseEntity<ApiResponse<?>> findByPage(@RequestParam(defaultValue = "1") @Min(1) Integer pageNum,
                                  @RequestParam(defaultValue = "10") @Min(1) Integer pageSize,
                                  @RequestParam(required = false) String id,
                                  @RequestParam(required = false) String username,
@@ -57,7 +61,8 @@ public class UserController {
         params.setPhone(Optional.ofNullable(phone).orElse(null));
 
         Page<User> page = userService.findByPageAndConditions(params);
-        return page;
+        return ResponseEntity.ok(ApiResponse.success(page));
+
     }
 
     // 新增一个用户
