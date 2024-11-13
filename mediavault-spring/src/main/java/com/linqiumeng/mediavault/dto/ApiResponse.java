@@ -1,7 +1,7 @@
 package com.linqiumeng.mediavault.dto;
 
 import lombok.Data;
-
+//响应类
 @Data
 public class ApiResponse<T> {
     private int code;
