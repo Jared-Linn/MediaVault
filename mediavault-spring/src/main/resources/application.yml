@@ -1,6 +1,6 @@
 # ????????????????API
-
-
+server:
+  port: 8081
 
 spring:
   application:
@@ -12,10 +12,25 @@ spring:
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
 
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+  servlet:
+    multipart:
+      max-file-size: 200MB
+      max-request-size: 200MB
+
+
   #本地配置
-ali:
+aliyun:
   oss:
     endpoint: ${ALI_OSS_ENDPOINT}
     access-key-id: ${ALI_OSS_ACCESS_KEY_ID}
     access-key-secret: ${ALI_OSS_ACCESS_KEY_SECRET}
     bucket-name: ${ALI_OSS_BUCKET_NAME}
+debug: true
