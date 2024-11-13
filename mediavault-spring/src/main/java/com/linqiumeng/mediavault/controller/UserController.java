@@ -1,6 +1,7 @@
 package com.linqiumeng.mediavault.controller;
 
 import com.linqiumeng.mediavault.entity.User;
+import com.linqiumeng.mediavault.exception.ResourceNotFoundException;
 import com.linqiumeng.mediavault.mapper.UserMapper;
 import com.linqiumeng.mediavault.service.UserService;
 import com.linqiumeng.mediavault.vo.Page;
@@ -11,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.constraints.Min;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -32,7 +32,11 @@ public class UserController {
     // 根据Id查询用户
     @GetMapping("/{id}")
     public User findById(@PathVariable Integer id) {
-        return userMapper.findById(id);
+        User user = userMapper.findById(id);
+        if (user == null) {
+            throw new ResourceNotFoundException("用户未找到，ID: " + id);
+        }
+        return user;
     }
 
     // 分页查询
@@ -42,7 +46,6 @@ public class UserController {
                                  @RequestParam(required = false) String id,
                                  @RequestParam(required = false) String username,
                                  @RequestParam(required = false) String phone) {
-
 
         UserQueryParams params = new UserQueryParams();
         params.setPageNum(pageNum);
@@ -57,7 +60,6 @@ public class UserController {
         return page;
     }
 
-
     // 新增一个用户
     @PostMapping
     public String addUser(@RequestBody User user) {
@@ -68,15 +70,18 @@ public class UserController {
     // 修改
     @PutMapping
     public String updateUser(@RequestBody User user) {
-        userMapper.updateById(user);
+        if (userMapper.updateById(user) == 0) {
+            throw new ResourceNotFoundException("用户未找到，ID: " + user.getId());
+        }
         return "success" + user.toString();
     }
 
     // 删除
     @DeleteMapping("/{id}")
     public String deleteUser(@PathVariable Integer id) {
-        userMapper.deleteById(id);
+        if (userMapper.deleteById(id) == 0) {
+            throw new ResourceNotFoundException("用户未找到，ID: " + id);
+        }
         return "success";
     }
-
 }
