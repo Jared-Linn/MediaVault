@@ -44,11 +44,11 @@ public interface UserMapper {
         "WHERE `id` = #{id}" +
         "</script>")
     @Transactional
-    void updateById(User user);
+    int updateById(User user);
 
 
     @Delete("DELETE FROM `user` WHERE `id` = #{id}")
-    void deleteById(Integer id);
+    int deleteById(Integer id);
 
     /**
      *分页查询 - 根据分页查询的数据 进行 模糊查询
