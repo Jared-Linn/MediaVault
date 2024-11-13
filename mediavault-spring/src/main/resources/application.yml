@@ -12,9 +12,10 @@ spring:
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
 
-s3:
-  endpoint: https://s3.bitiful.net
-  access-key-id: YNzWbwszRG5y36On9D6LqOWc
-  secret-access-key: hFK4X1bSrycg04pEABdSLd1ssttC2Vb
-  bucket: fafa
-
+  #本地配置
+ali:
+  oss:
+    endpoint: ${ALI_OSS_ENDPOINT}
+    access-key-id: ${ALI_OSS_ACCESS_KEY_ID}
+    access-key-secret: ${ALI_OSS_ACCESS_KEY_SECRET}
+    bucket-name: ${ALI_OSS_BUCKET_NAME}
