@@ -86,7 +86,9 @@ public class CommonController {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.failure(HttpStatus.BAD_REQUEST.value(), MessageConstant.UPLOAD_FAILED));
             }
         }
+        // 成功
+//        return Result.success(fileUrls);
+        return ResponseEntity.ok(ApiResponse.success(fileUrls));
 
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.failure(HttpStatus.BAD_REQUEST.value(), MessageConstant.UPLOAD_FAILED));
     }
 }
