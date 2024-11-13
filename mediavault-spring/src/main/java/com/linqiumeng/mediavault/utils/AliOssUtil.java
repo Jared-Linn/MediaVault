@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayInputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 工具类
@@ -37,7 +39,7 @@ public class AliOssUtil {
      * @param objectName
      * @return
      */
-    public String upload(byte[] bytes, String objectName) {
+    public Map<String, Object> upload(byte[] bytes, String objectName) {
         // 创建OSSClient实例。
         OSS ossClient = new OSSClientBuilder().build(endpoint, accessKeyId, accessKeySecret);
 
@@ -50,9 +52,11 @@ public class AliOssUtil {
             log.error("Error Code: {}", oe.getErrorCode());
             log.error("Request ID: {}", oe.getRequestId());
             log.error("Host ID: {}", oe.getHostId());
+            throw new RuntimeException("文件上传失败", oe);
         } catch (ClientException ce) {
             log.error("Caught an ClientException, which means the client encountered a serious internal problem while trying to communicate with OSS, such as not being able to access the network.", ce);
             log.error("Error Message: {}", ce.getMessage());
+            throw new RuntimeException("文件上传失败", ce);
         } finally {
             if (ossClient != null) {
                 ossClient.shutdown();
@@ -64,6 +68,12 @@ public class AliOssUtil {
 
         log.info("文件上传到: {}", fileUrl);
 
-        return fileUrl;
+        Map<String, Object> result = new HashMap<>();
+        result.put("fileUrl", fileUrl);
+        result.put("objectName", objectName);
+        result.put("bucketName", bucketName);
+        result.put("endpoint", endpoint);
+
+        return result;
     }
 }
