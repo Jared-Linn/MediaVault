@@ -1,5 +1,6 @@
 package com.linqiumeng.mediavault.controller;
 
+import com.linqiumeng.mediavault.dto.ApiResponse;
 import com.linqiumeng.mediavault.entity.FileEntity;
 import com.linqiumeng.mediavault.repository.FileRepository;
 import com.linqiumeng.mediavault.utils.AliOssUtil;
@@ -9,6 +10,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -38,7 +41,7 @@ public class CommonController {
      */
     @PostMapping("/upload")
     @ApiOperation("文件上传")
-    public Result<List<String>> upload(@RequestParam("file") MultipartFile[] files) {
+    public ResponseEntity<ApiResponse<?>> upload(@RequestParam("file") MultipartFile[] files) {
         log.info("文件上传：{}", files);
 
         List<String> fileUrls = new ArrayList<>();
@@ -48,14 +51,14 @@ public class CommonController {
                 String originalFilename = file.getOriginalFilename();
                 if (originalFilename == null || originalFilename.isEmpty()) {
                     log.error("文件名为空");
-                    return Result.error(MessageConstant.INVALID_FILE_NAME);
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.failure(HttpStatus.BAD_REQUEST.value(), "文件上传失败"));
                 }
 
                 // 截取原始文件名的后缀
                 String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
                 if (extension.isEmpty()) {
                     log.error("文件扩展名为空");
-                    return Result.error(MessageConstant.INVALID_FILE_EXTENSION);
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.failure(HttpStatus.BAD_REQUEST.value(), MessageConstant.INVALID_FILE_EXTENSION));
                 }
 
                 // 构造新文件名称
@@ -80,10 +83,10 @@ public class CommonController {
                 fileUrls.add(filePath);
             } catch (IOException e) {
                 log.error("文件上传失败：{}", e.getMessage(), e);
-                return Result.error(MessageConstant.UPLOAD_FAILED);
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.failure(HttpStatus.BAD_REQUEST.value(), MessageConstant.UPLOAD_FAILED));
             }
         }
 
-        return Result.success(fileUrls);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.failure(HttpStatus.BAD_REQUEST.value(), MessageConstant.UPLOAD_FAILED));
     }
 }
