@@ -13,7 +13,7 @@ public interface UserMapper {
     @Select("SELECT * FROM user;")
     List<User> findAll();
 
-    @Select("SELECT * FROM user WHERE name = #{name}")
+    @Select("SELECT * FROM user WHERE username = #{name}")
     User findByName(String name);
 
     @Select("SELECT * FROM user WHERE id = #{id}")
@@ -22,20 +22,22 @@ public interface UserMapper {
     @Select("SELECT * FROM user WHERE phone = #{phone}")
     User findByPhone(String phone);
 
-    @Select("SELECT * FROM user WHERE name = #{name} AND password = #{password}")
-    User findByNameAndPassword(String name, String password);
+    @Select("SELECT * FROM user WHERE username = #{username} AND password = #{password}")
+    User findByNameAndPassword(String username, String password);
 
     @Select("SELECT * FROM user WHERE phone = #{phone} AND password = #{password}")
     User findByPhoneAndPassword(String phone, String password);
 
 
     // INSERT
-    @Update("INSERT INTO `user` (`name`, `password`, `phone`) VALUES (#{name}, #{password},#{phone});")
+    @Update("INSERT INTO `user` (`username`, `password`, `phone`) VALUES (#{username}, #{password},#{phone});")
     @Transactional
     void save(User user);
+
+
     @Update("<script>UPDATE `user`" +
         "<set>" +
-        "<if test='name != null and name != \"\"'>`name` = #{name},</if>" +
+        "<if test='name != null and name != \"\"'>`username` = #{username},</if>" +
         "<if test='password != null and password != \"\"'>`password` = #{password},</if>" +
         "<if test='phone != null and phone != \"\"'>`phone` = #{phone},</if>" +
         "</set>" +
@@ -54,11 +56,10 @@ public interface UserMapper {
      * @Param("offset") int offset：分页查询的偏移量。
      * @Param("limit") int limit：每页记录数。
      */
-
     @Select("<script>" +
             "SELECT * FROM `user` " +
             "<where>" +
-            "<if test='params.name != null and params.name != \"\"'>AND name LIKE CONCAT('%', #{params.name}, '%')</if>" +
+            "<if test='params.username != null and params.username != \"\"'>AND username LIKE CONCAT('%', #{params.username}, '%')</if>" +
             "<if test='params.id != null and params.id != \"\"'>AND id LIKE CONCAT('%', #{params.id}, '%')</if>" +
             "<if test='params.phone != null and params.phone != \"\"'>AND phone LIKE CONCAT('%', #{params.phone}, '%')</if>" +
             "</where>" +
@@ -72,7 +73,7 @@ public interface UserMapper {
     @Select("<script>" +
             "SELECT COUNT(*) FROM `user` " +
             "<where>" +
-            "<if test='name != null and name != \"\"'>AND name LIKE CONCAT('%', #{name}, '%')</if>" +
+            "<if test='username != null and username != \"\"'>AND username LIKE CONCAT('%', #{username}, '%')</if>" +
             "<if test='id != null and id != \"\"'>AND id LIKE CONCAT('%', #{id}, '%')</if>" +
             "<if test='phone != null and phone != \"\"'>AND phone LIKE CONCAT('%', #{phone}, '%')</if>" +
             "</where>" +

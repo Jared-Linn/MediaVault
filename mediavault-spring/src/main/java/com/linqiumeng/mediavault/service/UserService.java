@@ -45,22 +45,22 @@ public class UserService {
     /**
      * 登录方法
      *
-     * @param name 用户名
+     * @param username 用户名
      * @param password 密码
      * @return 登录是否成功
      */
-    public boolean login(String name, String password) {
+    public boolean login(String username, String password) {
         try {
-            User user = userMapper.findByNameAndPassword(name, password);
+            User user = userMapper.findByNameAndPassword(username, password);
             if (user != null) {
-                logger.info("User logged in successfully: {}", name);
+                logger.info("User logged in successfully: {}", username);
                 return true;
             } else {
-                logger.warn("Login failed for user: {}", name);
+                logger.warn("Login failed for user: {}", username);
                 return false;
             }
         } catch (Exception e) {
-            logger.error("Error during login for user: {}", name, e);
+            logger.error("Error during login for user: {}", username, e);
             return false;
         }
     }

@@ -40,7 +40,7 @@ public class UserController {
     public Page<User> findByPage(@RequestParam(defaultValue = "1") @Min(1) Integer pageNum,
                                  @RequestParam(defaultValue = "10") @Min(1) Integer pageSize,
                                  @RequestParam(required = false) String id,
-                                 @RequestParam(required = false) String name,
+                                 @RequestParam(required = false) String username,
                                  @RequestParam(required = false) String phone) {
 
 
@@ -50,7 +50,7 @@ public class UserController {
 
         // 处理可选参数
         params.setId(Optional.ofNullable(id).orElse(null));
-        params.setName(Optional.ofNullable(name).orElse(null));
+        params.setUsername(Optional.ofNullable(username).orElse(null));
         params.setPhone(Optional.ofNullable(phone).orElse(null));
 
         Page<User> page = userService.findByPageAndConditions(params);
