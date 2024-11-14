@@ -1,4 +1,4 @@
-# demo
+# mediavault
 
 ## Project setup
 ```

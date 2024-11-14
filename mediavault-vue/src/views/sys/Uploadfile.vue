@@ -1,58 +1,81 @@
 <template>
-  <div>
-    <h1>生成签名 URL</h1>
-    <input v-model="fileKey" placeholder="输入文件 key" />
-    <button @click="generateSignedUrl">生成 URL</button>
-    <p v-if="signedUrl">签名 URL: {{ signedUrl }}</p>
-    <p v-if="error" style="color: red;">{{ error }}</p>
-  </div>
+  <el-upload
+      ref="uploadRef"
+      :auto-upload="false"
+      multiple
+      @change="handleFileChange"
+  >
+    <template #trigger>
+      <el-button type="primary">select file</el-button>
+    </template>
+
+    <el-button class="ml-3" type="success" @click="submitUpload">
+      upload to server
+    </el-button>
+
+<!--    <template #tip>-->
+<!--      <div class="el-upload__tip">-->
+<!--        jpg/png files with a size less than 500kb-->
+<!--      </div>-->
+<!--    </template>-->
+  </el-upload>
 </template>
 
-<script>
-import axios from 'axios';
+<script lang="ts" setup>
+import  { ref } from 'vue'
+import type { UploadInstance, UploadFile } from 'element-plus'
 
-export default {
-  data() {
-    return {
-      fileKey: '',
-      signedUrl: '',
-      error: ''
-    };
-  },
-  methods: {
-    async generateSignedUrl() {
-      try {
-        const response = await axios.get(`api/generate-signed-url?key=${this.fileKey}`);
-        this.signedUrl = response.data;
-        this.error = '';
-      } catch (error) {
-        if (error.response && error.response.data) {
-          this.error = `生成上传 URL 失败: ${error.response.data}`;
-        } else {
-          this.error = `生成上传 URL 失败: ${error.message}`;
-        }
-        this.signedUrl = '';
-      }
-    }
+const uploadRef = ref<UploadInstance>()
+const fileList = ref<UploadFile[]>([])
+
+const handleFileChange = (file: UploadFile, newFileList: UploadFile[]) => {
+  fileList.value = newFileList
+}
+
+const submitUpload = async () => {
+  const currentFileList = fileList.value
+
+  if (!currentFileList || currentFileList.length === 0) {
+    alert('请选择一个或多个文件')
+    return
   }
-};
+
+  const formData = new FormData()
+  currentFileList.forEach((file: UploadFile) => {
+    if (file.raw) {
+      formData.append('file', file.raw, file.name)
+    }
+  })
+
+  try {
+    const response = await fetch('/api/admin/common/upload', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      },
+      body: formData,
+    })
+
+    if (response.ok) {
+      const result = await response.json()
+      console.log('上传成功:', result)
+      alert('文件上传成功')
+    } else {
+      const errorData = await response.json()
+      console.error('上传失败:', errorData.message || response.statusText)
+      alert('文件上传失败: ' + (errorData.message || response.statusText))
+    }
+  } catch (error) {
+    console.error('请求出错:', error)
+    alert('请求出错，请重试')
+  }
+}
 </script>
 
 <style scoped>
-input {
-  margin-bottom: 10px;
-  padding: 5px;
-}
-
-button {
-  padding: 10px 20px;
-  background-color: #4CAF50;
-  color: white;
-  border: none;
-  cursor: pointer;
-}
-
-button:hover {
-  background-color: #45a049;
+/* 可以在这里添加样式 */
+.el-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
 }
 </style>
