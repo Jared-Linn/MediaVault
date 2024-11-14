@@ -42,3 +42,6 @@ aliyun:
     access-key-secret: ${ALI_OSS_ACCESS_KEY_SECRET}
     bucket-name: ${ALI_OSS_BUCKET_NAME}
 debug: true
+
+jwt:
+  SECRET: p9hYg99mt3F
