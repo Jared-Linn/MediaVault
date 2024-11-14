@@ -5,10 +5,11 @@ import com.linqiumeng.mediavault.vo.UserQueryParams;
 import org.apache.ibatis.annotations.*;
 import com.linqiumeng.mediavault.entity.User;
 import org.springframework.transaction.annotation.Transactional;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 import java.util.List;
 @Mapper
-public interface UserMapper {
+public interface UserMapper extends BaseMapper<User> {
     // SELECT * FROM user;
     @Select("SELECT * FROM user;")
     List<User> findAll();
