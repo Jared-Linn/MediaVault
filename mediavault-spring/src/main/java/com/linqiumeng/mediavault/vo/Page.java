@@ -9,13 +9,13 @@ public class Page<T> {
     private int pageNum;
     private int pageSize;
     private int total;
-    private List<T> data;
+    private List<T> tableData;
 
-    public Page(int pageNum, int pageSize, int total, List<T> data) {
+    public Page(int pageNum, int pageSize, int total, List<T> tableData) {
         this.pageNum = pageNum;
         this.pageSize = pageSize;
         this.total = total;
-        this.data = data;
+        this.tableData = tableData;
     }
 
     public int getPageNum() {
@@ -42,11 +42,11 @@ public class Page<T> {
         this.total = total;
     }
 
-    public List<T> getData() {
-        return data;
+    public List<T> getTableData() {
+        return tableData;
     }
 
-    public void setData(List<T> data) {
-        this.data = data;
+    public void setTableData(List<T> tableData) {
+        this.tableData = tableData;
     }
 }

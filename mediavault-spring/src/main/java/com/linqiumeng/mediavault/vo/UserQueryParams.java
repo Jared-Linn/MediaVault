@@ -3,7 +3,7 @@ package com.linqiumeng.mediavault.vo;
 public class UserQueryParams {
     private Integer pageNum;
     private Integer pageSize;
-    private String name;
+    private String username;
     private String id;
     private String phone;
     private int offset;
@@ -25,12 +25,12 @@ public class UserQueryParams {
         this.pageSize = pageSize;
     }
 
-    public String getName() {
-        return name;
+    public String getUsername() {
+        return username;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getId() {

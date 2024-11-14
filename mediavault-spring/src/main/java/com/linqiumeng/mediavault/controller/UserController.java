@@ -1,16 +1,20 @@
 package com.linqiumeng.mediavault.controller;
 
+import com.linqiumeng.mediavault.dto.ApiResponse;
+import com.linqiumeng.mediavault.dto.ApiResponseToken;
 import com.linqiumeng.mediavault.entity.User;
+import com.linqiumeng.mediavault.exception.ResourceNotFoundException;
 import com.linqiumeng.mediavault.mapper.UserMapper;
 import com.linqiumeng.mediavault.service.UserService;
 import com.linqiumeng.mediavault.vo.Page;
 import com.linqiumeng.mediavault.vo.UserQueryParams;
+
 import jakarta.annotation.Resource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.constraints.Min;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -30,18 +34,22 @@ public class UserController {
 
     // 根据Id查询用户
     @GetMapping("/{id}")
-    public User findById(@PathVariable Integer id) {
-        return userMapper.findById(id);
+    public ResponseEntity<ApiResponse<?>> findById(@PathVariable Integer id) {
+        User user = userMapper.findById(id);
+        if (user == null) {
+            throw new ResourceNotFoundException("用户未找到，ID: " + id);
+        }
+        return ResponseEntity.ok(ApiResponse.success(user));
+
     }
 
     // 分页查询
     @GetMapping("/list")
-    public Page<User> findByPage(@RequestParam(defaultValue = "1") @Min(1) Integer pageNum,
+    public ResponseEntity<ApiResponse<?>> findByPage(@RequestParam(defaultValue = "1") @Min(1) Integer pageNum,
                                  @RequestParam(defaultValue = "10") @Min(1) Integer pageSize,
                                  @RequestParam(required = false) String id,
-                                 @RequestParam(required = false) String name,
+                                 @RequestParam(required = false) String username,
                                  @RequestParam(required = false) String phone) {
-
 
         UserQueryParams params = new UserQueryParams();
         params.setPageNum(pageNum);
@@ -49,13 +57,13 @@ public class UserController {
 
         // 处理可选参数
         params.setId(Optional.ofNullable(id).orElse(null));
-        params.setName(Optional.ofNullable(name).orElse(null));
+        params.setUsername(Optional.ofNullable(username).orElse(null));
         params.setPhone(Optional.ofNullable(phone).orElse(null));
 
         Page<User> page = userService.findByPageAndConditions(params);
-        return page;
-    }
+        return ResponseEntity.ok(ApiResponse.success(page));
 
+    }
 
     // 新增一个用户
     @PostMapping
@@ -67,15 +75,18 @@ public class UserController {
     // 修改
     @PutMapping
     public String updateUser(@RequestBody User user) {
-        userMapper.updateById(user);
+        if (userMapper.updateById(user) == 0) {
+            throw new ResourceNotFoundException("用户未找到，ID: " + user.getId());
+        }
         return "success" + user.toString();
     }
 
     // 删除
     @DeleteMapping("/{id}")
     public String deleteUser(@PathVariable Integer id) {
-        userMapper.deleteById(id);
+        if (userMapper.deleteById(id) == 0) {
+            throw new ResourceNotFoundException("用户未找到，ID: " + id);
+        }
         return "success";
     }
-
 }

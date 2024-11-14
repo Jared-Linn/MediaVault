@@ -1,20 +1,36 @@
 # ????????????????API
-
-
+server:
+  port: 8081
 
 spring:
   application:
     name: mediavault
 
   datasource:
-    url: jdbc:mysql://172.10.10.2:3306/mediavault?serverTimezone=GMT%2B8&characterEncoding=utf-8&useSSL=false
+    url: jdbc:mysql://103.207.68.161:3310/mediavault?serverTimezone=GMT%2B8&characterEncoding=utf-8&useSSL=false
     username: root
-    password: root
+    password: sdQPzCLPc2
     driver-class-name: com.mysql.cj.jdbc.Driver
 
-s3:
-  endpoint: https://s3.bitiful.net
-  access-key-id: YNzWbwszRG5y36On9D6LqOWc
-  secret-access-key: hFK4X1bSrycg04pEABdSLd1ssttC2Vb
-  bucket: fafa
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
 
+  servlet:
+    multipart:
+      max-file-size: 5GB
+      max-request-size: 5GB
+
+
+  #本地配置
+aliyun:
+  oss:
+    endpoint: ${ALI_OSS_ENDPOINT}
+    access-key-id: ${ALI_OSS_ACCESS_KEY_ID}
+    access-key-secret: ${ALI_OSS_ACCESS_KEY_SECRET}
+    bucket-name: ${ALI_OSS_BUCKET_NAME}
+debug: true

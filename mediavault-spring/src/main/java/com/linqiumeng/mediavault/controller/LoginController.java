@@ -32,10 +32,10 @@ public class LoginController {
      */
     @PostMapping("/login")
     public ResponseEntity<ApiResponseToken<?>> login(@RequestBody LoginRequest loginRequest) {
-        boolean loginSuccess = userService.login(loginRequest.getName(), loginRequest.getPassword());
+        boolean loginSuccess = userService.login(loginRequest.getUsername(), loginRequest.getPassword());
 
         if (loginSuccess) {
-            User user = userService.getUserByName(loginRequest.getName());
+            User user = userService.getUserByName(loginRequest.getUsername());
             String token = generateToken(user);
             return ResponseEntity.ok(ApiResponseToken.success(token));
         } else {
@@ -52,7 +52,7 @@ public class LoginController {
     private String generateToken(User user) {
         Algorithm algorithm = Algorithm.HMAC256(SECRET);
         return JWT.create()
-                .withSubject(user.getName())
+                .withSubject(user.getUsername())
                 .withClaim("userId", user.getId())
                 .withExpiresAt(new Date(System.currentTimeMillis() + 900000)) // 有效期  小时
                 .sign(algorithm);
