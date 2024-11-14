@@ -16,7 +16,7 @@ import java.util.Date;
 
 @RestController
 //@CrossOrigin(origins = "http://172.10.10.2:80")
-@RequestMapping("")
+@RequestMapping()
 public class LoginController {
 
     @Resource
