@@ -3,10 +3,12 @@
   <GuestContent v-else />
   <Uploadfile />
   <button @click="getData">跨越请求</button>
+  <button @click="getData2">跨越请求22</button>
   <button @click="logout">退出登录</button>
 <!-- 登录状态切换组件 -->
     <button @click="router().push('/login')">前往登录</button>
-
+  <br>
+  <Decryption />
 </template>
 
 <script>
@@ -15,7 +17,7 @@ import { useRouter } from 'vue-router';
 import axios from 'axios';
 import LoggedInContent from '@/views/role/LoggedInContent.vue';
 import GuestContent from '@/views/role/GuestContent.vue';
-
+import Decryption from '@/views/sys/Decryption.vue';
 import Uploadfile from '@/views/sys/Uploadfile.vue';
 import router from "@/router";
 
@@ -31,7 +33,8 @@ export default {
   components: {
     LoggedInContent,
     GuestContent,
-      Uploadfile
+      Uploadfile,
+      Decryption
   },
   setup() {
     const router = useRouter();
@@ -51,9 +54,18 @@ export default {
     });
 
     const getData = async () => {
-      const res = await axios.get('/api/user/2');
-      console.log(res);
+        for (let i = 0; i < 100000; i++) {
+            const res = await axios.get('/api/user/2');
+            // console.log(res);
+        }
     };
+
+      const getData2 = async () => {
+          for (let i = 0; i < 100000; i++) {
+              const res = await axios.get('/api/user/2');
+              // console.log(res);
+          }
+      };
 
     const logout = () => {
       localStorage.removeItem('token');
@@ -65,6 +77,7 @@ export default {
     return {
       isLoggedIn,
       getData,
+      getData2,
       logout
     };
   },
