@@ -2,13 +2,16 @@
   <LoggedInContent v-if="isLoggedIn" />
   <GuestContent v-else />
   <Uploadfile />
-  <button @click="getData">跨越请求</button>
-  <button @click="getData2">跨越请求22</button>
+
   <button @click="logout">退出登录</button>
 <!-- 登录状态切换组件 -->
     <button @click="router().push('/login')">前往登录</button>
   <br>
   <Decryption />
+  <div>
+      <button @click="getData">跨越请求</button>
+      <button @click="getData2">跨越请求22</button>
+  </div>
 </template>
 
 <script>
@@ -54,10 +57,7 @@ export default {
     });
 
     const getData = async () => {
-        for (let i = 0; i < 100000; i++) {
             const res = await axios.get('/api/user/2');
-            // console.log(res);
-        }
     };
 
       const getData2 = async () => {
