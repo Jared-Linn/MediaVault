@@ -9,6 +9,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,8 +22,8 @@ public class LoginController {
 
     @Resource
     private UserService userService;
-
-    private static final String SECRET = "p9hYg99mt3F"; // 替换为你的密钥
+    @Value("${jwt.SECRET}")
+    private static String SECRET ; // 替换为你的密钥
 
     /**
      * 登录方法
@@ -54,7 +55,7 @@ public class LoginController {
         return JWT.create()
                 .withSubject(user.getUsername())
                 .withClaim("userId", user.getId())
-                .withExpiresAt(new Date(System.currentTimeMillis() + 900000)) // 有效期  小时
+                .withExpiresAt(new Date(System.currentTimeMillis() + 900000)) // 有效期 15 小时
                 .sign(algorithm);
     }
 }
