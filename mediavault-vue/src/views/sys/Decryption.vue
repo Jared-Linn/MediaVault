@@ -66,5 +66,9 @@ export default {
 </script>
 
 <style scoped>
+img {
+  width:100%;
+  height:auto;
+}
 /* 可以在这里添加样式 */
 </style>
