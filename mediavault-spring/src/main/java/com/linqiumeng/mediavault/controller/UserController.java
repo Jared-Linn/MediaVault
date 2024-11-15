@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/sys/user")
 public class UserController {
     @Resource
     UserMapper userMapper;

@@ -12,6 +12,7 @@ spring:
     #    driver-class-name: com.mysql.cj.jdbc.Driver
 
     url: jdbc:mysql://172.10.10.2:3306/mediavault?serverTimezone=GMT%2B8&characterEncoding=utf-8&useSSL=false
+#    url: jdbc:mysql://127.0.0.1:3306/mediavault?serverTimezone=GMT%2B8&characterEncoding=utf-8&useSSL=false
     username: root
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -40,7 +41,6 @@ aliyun:
     access-key-secret: ${ALI_OSS_ACCESS_KEY_SECRET}
     bucket-name: ${ALI_OSS_BUCKET_NAME}
 debug: true
-
 
 jwt:
   SECRET: p9hYg99mt3F
