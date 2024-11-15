@@ -1,7 +1,6 @@
-package com.linqiumeng.mediavault.controller;
+package com.linqiumeng.mediavault.controller.user;
 
 import com.linqiumeng.mediavault.dto.ApiResponse;
-import com.linqiumeng.mediavault.dto.token.ApiResponseToken;
 import com.linqiumeng.mediavault.entity.User;
 import com.linqiumeng.mediavault.exception.ResourceNotFoundException;
 import com.linqiumeng.mediavault.mapper.UserMapper;
