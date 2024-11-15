@@ -22,7 +22,7 @@
 </template>
 
 <script lang="ts" setup>
-import  { ref } from 'vue'
+import  { ref } from '@vue/runtime-core'
 import type { UploadInstance, UploadFile } from 'element-plus'
 
 const uploadRef = ref<UploadInstance>()

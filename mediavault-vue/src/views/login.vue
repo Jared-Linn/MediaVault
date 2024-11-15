@@ -95,35 +95,35 @@
     </div>
   </div>
 </template>
-
+'@vue/runtime-core'
 
 <script setup lang="ts">
 import { reactive, ref } from '@vue/runtime-core'
 import { Lock, User } from '@element-plus/icons-vue'
 import { ElForm } from 'element-plus'
-import mySwitch from '@/utils/mySwitch'
 import { ElMessage } from 'element-plus'
 import { useRouter } from 'vue-router'
-import axios from 'axios'
 import { AxiosRequestConfig } from 'axios';
+import axios from 'axios'
+import mySwitch from '@/utils/mySwitch'
 
 // 定义表单接口
 interface Form {
-    username: string
-    password: string
-    confirmPassword?: string
+  username: string
+  password: string
+  confirmPassword?: string
 }
 
 // 创建响应式表单状态
 const loginForm = reactive<Form>({
-    username: '',
-    password: ''
+  username: '',
+  password: ''
 })
 
 const registerForm = reactive<Form>({
-    username: '',
-    password: '',
-    confirmPassword: ''
+  username: '',
+  password: '',
+  confirmPassword: ''
 })
 
 // 创建表单引用
@@ -132,18 +132,18 @@ const registerFormRef = ref<InstanceType<typeof ElForm>>()
 
 // 定义验证规则
 const rules = reactive({
-    username: [
-        { required: true, message: '请输入用户名', trigger: 'blur' },
-        { min: 1, max: 5, message: '长度应该在3~5个字符之间', trigger: 'blur' },
-    ],
-    password: [
-        { required: true, message: '请输入密码', trigger: 'blur' },
-        { min: 1, message: '长度应该大于6', trigger: 'blur' },
-    ],
-    confirmPassword: [
-        { required: true, message: '请输入确认密码', trigger: 'blur' },
-        { min: 1, message: '长度应该大于6', trigger: 'blur' },
-    ],
+  username: [
+    { required: true, message: '请输入用户名', trigger: 'blur' },
+    { min: 1, max: 5, message: '长度应该在3~5个字符之间', trigger: 'blur' },
+  ],
+  password: [
+    { required: true, message: '请输入密码', trigger: 'blur' },
+    { min: 1, message: '长度应该大于6', trigger: 'blur' },
+  ],
+  confirmPassword: [
+    { required: true, message: '请输入确认密码', trigger: 'blur' },
+    { min: 1, message: '长度应该大于6', trigger: 'blur' },
+  ],
 })
 
 // 使用路由
@@ -151,57 +151,76 @@ const router = useRouter()
 
 // 登录逻辑
 const login = async () => {
-    // 打印
-    // console.log('登录表单数据:', loginForm["username"])
-    // console.log('登录表单数据:', loginForm.username)
-    try {
-        const response = await axios.post('/api/login', {
-            username: loginForm["username"], // 确保使用正确的属性名
-            password: loginForm["password"], // 确保使用正确的属性名
-        })
+  try {
+    const response = await axios.post('/api/login', {
+      username: loginForm.username,
+      password: loginForm.password,
+    })
 
-        if (response.data.code === 200) {
-            console.log('登录成功:', response.data)
-            const token = response.data.token
-            console.log('Token:', token)
-            localStorage.setItem('token', token)
-            await router.push('/home')
-        } else {
-            console.error('登录失败:', response.data.message)
-            ElMessage.error(response.data.message)
-        }
-    } catch (error) {
-        console.error('请求失败:', error)
-        ElMessage.error('请求失败，请稍后再试')
+    if (response.data.code === 200) {
+      console.log('登录成功:', response.data)
+      const token = response.data.data
+      console.log('Token:', token)
+      localStorage.setItem('token', token)
+      await router.push('/home')
+    } else {
+      console.error('登录失败:', response.data.message)
+      ElMessage.error(response.data.message)
     }
+  } catch (error) {
+    console.error('请求失败:', error)
+    ElMessage.error('请求失败，请稍后再试')
+  }
 }
 
 // 在后续请求中携带 Token
 // 使用 Axios 拦截器在每个请求中自动携带 Token。
 axios.interceptors.request.use(
     (config: AxiosRequestConfig) => {
-        const token = localStorage.getItem('token');
-        if (token) {
-            config.headers = {
-                ...config.headers,
-                Authorization: `Bearer ${token}`
-            };
-        }
-        return config;
+      const token = localStorage.getItem('token');
+      if (token) {
+        config.headers = {
+          ...config.headers,
+          Authorization: `Bearer ${token}`
+        };
+      }
+      return config;
     },
     (error) => {
-        return Promise.reject(error);
+      return Promise.reject(error);
     }
 );
 
 // 注册逻辑
-const register = () => {
-    // 注册逻辑
+const register = async () => {
+  try {
+    const response = await axios.post('/api/register', {
+      username: registerForm.username,
+      password: registerForm.password,
+      confirmPassword: registerForm.confirmPassword,
+    })
+
+    if (response.data.code === 200) {
+      console.log('注册成功:', response.data)
+      ElMessage.success('注册成功')
+      // 清空表单
+      registerForm.username = ''
+      registerForm.password = ''
+      registerForm.confirmPassword = ''
+    } else {
+      console.error('注册失败:', response.data.message)
+      ElMessage.error(response.data.message)
+    }
+  } catch (error) {
+    console.error('请求失败:', error)
+    ElMessage.error('请求失败，请稍后再试')
+  }
 }
 </script>
 
 
-<style scoped>
+
+<style scoped lang="css">
 /* 去除input的轮廓 */
 input {
   outline: none;

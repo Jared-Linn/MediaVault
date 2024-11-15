@@ -57,12 +57,12 @@ export default {
     });
 
     const getData = async () => {
-            const res = await axios.get('/api/user/2');
+            const res = await axios.get('/api/sys/user/2');
     };
 
       const getData2 = async () => {
           for (let i = 0; i < 100000; i++) {
-              const res = await axios.get('/api/user/2');
+              const res = await axios.get('/api/sys/user/2');
               // console.log(res);
           }
       };

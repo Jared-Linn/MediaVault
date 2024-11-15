@@ -14,8 +14,11 @@ public interface UserMapper extends BaseMapper<User> {
     @Select("SELECT * FROM user;")
     List<User> findAll();
 
-    @Select("SELECT * FROM user WHERE username = #{name}")
-    User findByName(String name);
+    @Select("SELECT * FROM user WHERE username = #{username}")
+    User findByUsername(String username);
+
+    @Select("SELECT * FROM user WHERE username = #{username} AND id = #{id}")
+    User getUserByNameAndId(String username , Integer id);
 
     @Select("SELECT * FROM user WHERE id = #{id}")
     User findById(Integer id);
@@ -80,4 +83,6 @@ public interface UserMapper extends BaseMapper<User> {
             "</where>" +
             "</script>")
     int getTotalUserCountByConditions(UserQueryParams params);
+
+
 }
