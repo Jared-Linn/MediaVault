@@ -1,5 +1,5 @@
 server:
-  port: 5000
+  port: 5002
 
 spring:
   application:
@@ -43,4 +43,6 @@ aliyun:
 debug: true
 
 jwt:
-  SECRET: p9hYg99mt3F
+  SECRET: BJfZfh4OBpSYGw3KTPg501mT9qL1c6
+
+  EXPIRATION_TIME: 8640000

@@ -1,11 +1,11 @@
 package com.linqiumeng.mediavault.controller;
 
 import com.linqiumeng.mediavault.dto.ApiResponse;
-import com.linqiumeng.mediavault.dto.ApiResponseToken;
+import com.linqiumeng.mediavault.dto.token.ApiResponseToken;
 import com.linqiumeng.mediavault.entity.User;
 import com.linqiumeng.mediavault.exception.ResourceNotFoundException;
 import com.linqiumeng.mediavault.mapper.UserMapper;
-import com.linqiumeng.mediavault.service.UserService;
+import com.linqiumeng.mediavault.service.UserServiceImpl;
 import com.linqiumeng.mediavault.vo.Page;
 import com.linqiumeng.mediavault.vo.UserQueryParams;
 
@@ -24,12 +24,12 @@ public class UserController {
     @Resource
     UserMapper userMapper;
     @Autowired
-    private UserService userService;
+    private UserServiceImpl userServiceImpl;
 
     // 查询所有用户
     @GetMapping
     public List<User> getUser() {
-        return userService.findAll();
+        return userServiceImpl.findAll();
     }
 
     // 根据Id查询用户
@@ -40,7 +40,6 @@ public class UserController {
             throw new ResourceNotFoundException("用户未找到，ID: " + id);
         }
         return ResponseEntity.ok(ApiResponse.success(user));
-
     }
 
     // 分页查询
@@ -60,7 +59,7 @@ public class UserController {
         params.setUsername(Optional.ofNullable(username).orElse(null));
         params.setPhone(Optional.ofNullable(phone).orElse(null));
 
-        Page<User> page = userService.findByPageAndConditions(params);
+        Page<User> page = userServiceImpl.findByPageAndConditions(params);
         return ResponseEntity.ok(ApiResponse.success(page));
 
     }

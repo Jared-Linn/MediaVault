@@ -4,12 +4,15 @@ import com.linqiumeng.mediavault.dto.ApiResponse;
 import com.linqiumeng.mediavault.dto.UserResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.multipart.MultipartException;
+
 @ControllerAdvice
 public class GlobalExceptionHandler {
-
 
     @ExceptionHandler(NullPointerException.class)
     public ResponseEntity<UserResponse> handleNullPointerException(NullPointerException ex) {
@@ -39,5 +42,20 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiResponse<Void>> handleException(Exception ex) {
         ApiResponse<Void> response = new ApiResponse<>(500, "系统内部错误: " + ex.getMessage(), null);
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<String> handleAccessDeniedException(AccessDeniedException ex) {
+        return new ResponseEntity<>("Access Denied: " + ex.getMessage(), HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<String> handleBadCredentialsException(BadCredentialsException ex) {
+        return new ResponseEntity<>("Bad Credentials: " + ex.getMessage(), HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(InsufficientAuthenticationException.class)
+    public ResponseEntity<String> handleInsufficientAuthenticationException(InsufficientAuthenticationException ex) {
+        return new ResponseEntity<>("Insufficient Authentication: " + ex.getMessage(), HttpStatus.UNAUTHORIZED);
     }
 }

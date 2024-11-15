@@ -2,20 +2,26 @@ package com.linqiumeng.mediavault.service;
 
 import com.linqiumeng.mediavault.entity.User;
 import com.linqiumeng.mediavault.mapper.UserMapper;
+import com.linqiumeng.mediavault.repository.UserRepository;
 import com.linqiumeng.mediavault.vo.Page;
+import com.linqiumeng.mediavault.service.impl.UserService;
 import com.linqiumeng.mediavault.vo.UserQueryParams;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.linqiumeng.mediavault.repository.FileRepository;
 
 import java.util.List;
 
 @Service
-public class UserService {
+public class UserServiceImpl implements UserService {
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private UserRepository userRepository;
+
 
 
     // 分页查询 - 根据分页查询的数据 进行 模糊查询
@@ -42,6 +48,8 @@ public class UserService {
             return new Page<>(params.getPageNum(), params.getPageSize(), 0, null);
         }
     }
+
+
     /**
      * 登录方法
      *
@@ -51,7 +59,7 @@ public class UserService {
      */
     public boolean login(String username, String password) {
         try {
-            User user = userMapper.findByNameAndPassword(username, password);
+            User user = userRepository.findByUsername(username);
             if (user != null) {
                 logger.info("User logged in successfully: {}", username);
                 return true;
@@ -69,7 +77,11 @@ public class UserService {
         return userMapper.findAll();
     }
 
-    public User getUserByName(String name) {
-        return userMapper.findByName(name);
+
+
+    @Override
+    public User getUserByName(String username) {
+        return userRepository.findByUsername(username);
     }
+
 }

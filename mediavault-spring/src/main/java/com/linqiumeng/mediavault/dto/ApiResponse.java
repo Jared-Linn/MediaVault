@@ -1,7 +1,12 @@
 package com.linqiumeng.mediavault.dto;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+
 //响应类
+@Setter
+@Getter
 @Data
 public class ApiResponse<T> {
     private int code;
@@ -21,5 +26,8 @@ public class ApiResponse<T> {
     public static <T> ApiResponse<T> failure(int code, String message) {
         return new ApiResponse<>(code, message, null);
     }
+
+    // getter 和 setter 方法
+
 
 }
