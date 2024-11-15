@@ -4,7 +4,7 @@ import com.linqiumeng.mediavault.dto.ApiResponse;
 import com.linqiumeng.mediavault.entity.User;
 import com.linqiumeng.mediavault.exception.ResourceNotFoundException;
 import com.linqiumeng.mediavault.mapper.UserMapper;
-import com.linqiumeng.mediavault.service.UserServiceImpl;
+import com.linqiumeng.mediavault.service.User.UserServiceImpl;
 import com.linqiumeng.mediavault.vo.Page;
 import com.linqiumeng.mediavault.vo.UserQueryParams;
 

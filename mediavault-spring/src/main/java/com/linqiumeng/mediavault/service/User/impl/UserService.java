@@ -1,4 +1,4 @@
-package com.linqiumeng.mediavault.service.impl;
+package com.linqiumeng.mediavault.service.User.impl;
 
 import com.linqiumeng.mediavault.entity.User;
 
