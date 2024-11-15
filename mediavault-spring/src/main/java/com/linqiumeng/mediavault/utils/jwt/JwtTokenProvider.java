@@ -17,21 +17,6 @@ public class JwtTokenProvider {
     @Value("${jwt.EXPIRATION_TIME}")
     private long EXPIRATION_TIME;
 
-    /**
-     * 生成JWT
-     * @param username 用户名
-     * @return 生成的JWT
-     */
-    public String generateToken(String username) {
-        Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + EXPIRATION_TIME);
-
-        return JWT.create()
-                .withSubject(username)
-                .withIssuedAt(now)
-                .withExpiresAt(expiryDate)
-                .sign(Algorithm.HMAC256(SECRET));
-    }
 
     /**
      * 生成包含用户ID的JWT
@@ -72,14 +57,7 @@ public class JwtTokenProvider {
      * @param token JWT
      * @return 是否有效
      */
-    public boolean validateToken(String token) {
-        try {
-            JWT.require(Algorithm.HMAC256(SECRET))
-                    .build()
-                    .verify(token);
-            return true;
-        } catch (JWTVerificationException e) {
-            return false;
-        }
+    public String validateToken(String token) throws JWTVerificationException {
+        return getUsernameFromToken(token);
     }
 }
