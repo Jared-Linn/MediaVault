@@ -59,11 +59,10 @@ public class JwtTokenFilter extends OncePerRequestFilter {
      * @throws ServletException 如果发生Servlet异常
      * @throws IOException      如果发生IO异常
      */
-@Override
-protected void doFilterInternal(
-        HttpServletRequest request, HttpServletResponse response, FilterChain chain
-) throws ServletException, IOException {
-    try {
+    @Override
+    protected void doFilterInternal(
+            HttpServletRequest request, HttpServletResponse response, FilterChain chain
+    ) throws ServletException, IOException {
         // 获取请求头中的Authorization信息
         String header = request.getHeader("Authorization");
         System.out.println("Authorization header: " + header);
@@ -74,27 +73,33 @@ protected void doFilterInternal(
         }
 
         // 检查请求头是否以"Bearer "开头
-        if (header.startsWith("Bearer ")) {
+        if (header != null && header.startsWith("Bearer ")) {
             // 提取JWT
             String token = header.substring(7);
             System.out.println("Extracted token: " + token);
+            try {
+                // 验证JWT的有效性
+                String username = JWT.require(Algorithm.HMAC256(SECRET))
+                        .build()
+                        .verify(token)
+                        .getSubject();
+                System.out.println("Verified username: " + username);
 
-            // 验证JWT的有效性
-            String username = String.valueOf(jwtTokenProvider.validateToken(token));
-            System.out.println("Verified username: " + username);
-
-            // 如果JWT有效且当前认证信息为空，则设置认证信息
-            if (username != null && !username.isEmpty() && SecurityContextHolder.getContext().getAuthentication() == null) {
-                // 加载用户详细信息
-                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-                // 创建认证令牌
-                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                        userDetails, null, userDetails.getAuthorities());
-                // 设置认证详情
-                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                // 将认证信息设置到SecurityContextHolder中
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-                System.out.println("Authentication set to SecurityContextHolder");
+                // 如果JWT有效且当前认证信息为空，则设置认证信息
+                if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                    // 加载用户详细信息
+                    UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+                    // 创建认证令牌
+                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                            userDetails, null, userDetails.getAuthorities());
+                    // 设置认证详情
+                    authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    // 将认证信息设置到SecurityContextHolder中
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                    System.out.println("Authentication set to SecurityContextHolder");
+                }
+            } catch (JWTVerificationException e) {
+                throw new JWTVerificationException("JWT verification failed: " + e.getMessage());
             }
         } else {
             throw new ServletException("Invalid Authorization format");
@@ -102,12 +107,6 @@ protected void doFilterInternal(
 
         // 继续处理请求
         chain.doFilter(request, response);
-    } catch (JWTVerificationException | ServletException e) {
-        // 统一处理异常，避免泄露敏感信息
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        response.getWriter().write("Unauthorized: " + e.getMessage());
     }
-}
-
 
 }
