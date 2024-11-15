@@ -72,11 +72,22 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             System.out.println("Extracted token: " + token);
             try {
                 // 验证JWT的有效性
-                String username = jwtTokenProvider.validateToken(token);
-                System.out.println("Verified username: " + username);
+                if (jwtTokenProvider.validateToken(token)) {
+                    System.out.println("id or username is null");
+                    return;
+                }
+                // 从 JWT中提取用户名
+                String username = jwtTokenProvider.getUsernameFromToken(token);
+                // 从 JWT中提取用户ID
+                Long userId = jwtTokenProvider.getUserIdFromToken(token);
+                // 检测 id + username 是否存在
+                if (userDetailsService.checkUser(username, Math.toIntExact(userId)) == null) {
+                    System.out.println("用户或id不存在");
+                    return;
+                }
 
                 // 如果JWT有效且当前认证信息为空，则设置认证信息
-                if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                if (SecurityContextHolder.getContext().getAuthentication() == null) {
                     // 加载用户详细信息
                     UserDetails userDetails = userDetailsService.loadUserByUsername(username);
                     // 创建认证令牌
@@ -89,6 +100,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                     System.out.println("Authentication set to SecurityContextHolder");
                 }
             } catch (JWTVerificationException e) {
+                System.out.println("User not found: " + e.getMessage());
                 throw new JWTVerificationException("JWT verification failed: " + e.getMessage());
             }
         } else {

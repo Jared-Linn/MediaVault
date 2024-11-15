@@ -20,8 +20,9 @@ public class JwtTokenProvider {
 
     /**
      * 生成包含用户ID的JWT
+     *
      * @param username 用户名
-     * @param userId 用户ID
+     * @param userId   用户ID
      * @return 生成的JWT
      */
     public String generateTokenWithUserId(String username, Long userId) {
@@ -38,6 +39,7 @@ public class JwtTokenProvider {
 
     /**
      * 从JWT中提取用户名
+     *
      * @param token JWT
      * @return 用户名
      */
@@ -48,16 +50,43 @@ public class JwtTokenProvider {
                     .verify(token)
                     .getSubject();
         } catch (JWTVerificationException e) {
+            System.out.println("Error occurred while verifying JWT: " + e.getMessage());
             return null;
         }
     }
 
     /**
+     * 从JWT中提取用户Id
+     *
+     * @param token JWT
+     * @return id
+     */
+    public Long getUserIdFromToken(String token) {
+        try {
+            return JWT.require(Algorithm.HMAC256(SECRET))
+                    .build()
+                    .verify(token)
+                    .getClaim("userId")
+                    .asLong();
+        } catch (JWTVerificationException e) {
+            System.out.println("Error occurred while verifying JWT: " + e.getMessage());
+
+            return null;
+        }
+    }
+
+
+    /**
      * 验证JWT的有效性
+     *
      * @param token JWT
      * @return 是否有效
      */
-    public String validateToken(String token) throws JWTVerificationException {
-        return getUsernameFromToken(token);
+    public boolean validateToken(String token) {
+        String extractedUsername = getUsernameFromToken(token);
+        Long extractedUserId = getUserIdFromToken(token);
+        System.out.println("Extracted username: " + extractedUsername);
+        System.out.println("Extracted extractedUserId: " + extractedUserId);
+        return extractedUsername == null || extractedUserId == null;
     }
 }
