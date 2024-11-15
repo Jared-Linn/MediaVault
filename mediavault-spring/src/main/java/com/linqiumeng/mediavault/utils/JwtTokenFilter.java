@@ -1,7 +1,5 @@
 package com.linqiumeng.mediavault.utils;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.linqiumeng.mediavault.service.UserDetailsServiceImpl;
 import com.linqiumeng.mediavault.service.impl.UserService;
@@ -14,7 +12,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -44,10 +41,6 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
 
-    @Value("${jwt.SECRET}")
-    private String SECRET; // 替换为实际的密钥
-
-
     /**
      * 执行过滤器的主要方法
      * 检查请求头中的JWT，并验证其有效性
@@ -73,16 +66,13 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         }
 
         // 检查请求头是否以"Bearer "开头
-        if (header != null && header.startsWith("Bearer ")) {
+        if (header.startsWith("Bearer ")) {
             // 提取JWT
             String token = header.substring(7);
             System.out.println("Extracted token: " + token);
             try {
                 // 验证JWT的有效性
-                String username = JWT.require(Algorithm.HMAC256(SECRET))
-                        .build()
-                        .verify(token)
-                        .getSubject();
+                String username = jwtTokenProvider.validateToken(token);
                 System.out.println("Verified username: " + username);
 
                 // 如果JWT有效且当前认证信息为空，则设置认证信息
