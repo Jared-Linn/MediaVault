@@ -1,10 +1,9 @@
 package com.linqiumeng.mediavault.controller;
 
-import com.linqiumeng.mediavault.dto.ApiResponse;
 import com.linqiumeng.mediavault.dto.token.ApiResponseToken;
 import com.linqiumeng.mediavault.dto.LoginRequest;
 import com.linqiumeng.mediavault.entity.User;
-import com.linqiumeng.mediavault.service.UserServiceImpl;
+import com.linqiumeng.mediavault.service.User.UserServiceImpl;
 import com.linqiumeng.mediavault.utils.jwt.JwtTokenProvider;
 import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;

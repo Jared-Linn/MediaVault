@@ -1,9 +1,9 @@
-package com.linqiumeng.mediavault.service;
+package com.linqiumeng.mediavault.service.User;
 
 import com.linqiumeng.mediavault.entity.User;
 import com.linqiumeng.mediavault.mapper.UserMapper;
 import com.linqiumeng.mediavault.vo.Page;
-import com.linqiumeng.mediavault.service.impl.UserService;
+import com.linqiumeng.mediavault.service.User.impl.UserService;
 import com.linqiumeng.mediavault.vo.UserQueryParams;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

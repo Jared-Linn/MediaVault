@@ -1,6 +1,6 @@
 package com.linqiumeng.mediavault.config;
 
-import com.linqiumeng.mediavault.utils.JwtTokenFilter;
+import com.linqiumeng.mediavault.utils.jwt.JwtTokenFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
