@@ -66,6 +66,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             chain.doFilter(request, response);
             return;
         }
+
         // 获取请求头中的Authorization信息
         String header = request.getHeader("Authorization");
         System.out.println("Authorization header: " + header);
@@ -77,7 +78,6 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             return;
         }
 
-
         // 检查请求头是否以"Bearer "开头
         if (header.startsWith("Bearer ")) {
             // 提取JWT
@@ -85,18 +85,22 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             System.out.println("Extracted token: " + token);
             try {
                 // 验证JWT的有效性
-                if (jwtTokenProvider.validateToken(token)) {
-                    System.out.println("id or username is null");
+                if (!jwtTokenProvider.validateToken(token)) {
+                    response.setStatus(HttpStatus.UNAUTHORIZED.value());
+                    response.getWriter().write("无效token");
                     return;
                 }
+
                 // 从 JWT中提取用户名
                 String username = jwtTokenProvider.getUsernameFromToken(token);
                 // 从 JWT中提取用户ID
                 Long userId = jwtTokenProvider.getUserIdFromToken(token);
+
                 // 检测 id + username 是否存在
                 if (userDetailsService.checkUser(username, Math.toIntExact(userId)) == null) {
-                    System.out.println("用户或id不存在");
-                    throw new ServletException("Authorization information is missing");
+                    response.setStatus(HttpStatus.UNAUTHORIZED.value());
+                    response.getWriter().write("User not found");
+                    return;
                 }
 
                 // 如果JWT有效且当前认证信息为空，则设置认证信息
@@ -113,8 +117,9 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                     System.out.println("Authentication set to SecurityContextHolder");
                 }
             } catch (JWTVerificationException e) {
-                System.out.println("User not found: " + e.getMessage());
-                throw new JWTVerificationException("JWT verification failed: " + e.getMessage());
+                response.setStatus(HttpStatus.UNAUTHORIZED.value());
+                response.getWriter().write("JWT verification failed: " + e.getMessage());
+                return;
             }
         } else {
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
@@ -125,5 +130,4 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         // 继续处理请求
         chain.doFilter(request, response);
     }
-
 }
