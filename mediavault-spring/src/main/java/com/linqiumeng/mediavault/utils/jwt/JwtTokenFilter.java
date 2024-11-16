@@ -8,6 +8,8 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,6 +18,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * JWT过滤器，用于验证请求中的JWT
@@ -37,6 +41,8 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
 
+    private List<String> whiteList = Arrays.asList("/login", "/register");
+
     /**
      * 执行过滤器的主要方法
      * 检查请求头中的JWT，并验证其有效性
@@ -50,16 +56,27 @@ public class JwtTokenFilter extends OncePerRequestFilter {
      */
     @Override
     protected void doFilterInternal(
-            HttpServletRequest request, HttpServletResponse response, FilterChain chain
+            @NonNull HttpServletRequest request,
+            @NonNull HttpServletResponse response,
+            @NonNull FilterChain chain
     ) throws ServletException, IOException {
+
+        String path = request.getServletPath();
+        if (whiteList.contains(path)) {
+            chain.doFilter(request, response);
+            return;
+        }
         // 获取请求头中的Authorization信息
         String header = request.getHeader("Authorization");
         System.out.println("Authorization header: " + header);
 
         // 检查请求头是否为空
         if (header == null || header.isEmpty()) {
-            throw new ServletException("Authorization information is missing");
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            response.getWriter().write("Authorization information is missing");
+            return;
         }
+
 
         // 检查请求头是否以"Bearer "开头
         if (header.startsWith("Bearer ")) {
@@ -79,7 +96,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 // 检测 id + username 是否存在
                 if (userDetailsService.checkUser(username, Math.toIntExact(userId)) == null) {
                     System.out.println("用户或id不存在");
-                    return;
+                    throw new ServletException("Authorization information is missing");
                 }
 
                 // 如果JWT有效且当前认证信息为空，则设置认证信息
@@ -100,7 +117,9 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 throw new JWTVerificationException("JWT verification failed: " + e.getMessage());
             }
         } else {
-            throw new ServletException("Invalid Authorization format");
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            response.getWriter().write("Authorization information is missing");
+            return;
         }
 
         // 继续处理请求
