@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/admin/common")
@@ -132,5 +133,60 @@ public class CommonController {
         }
         // 成功
         return ResponseEntity.ok(ApiResponse.success(fileUrls));
+    }
+
+    /**
+     * 根据 token 获取用户的文件信息
+     *
+     * @param token 用户的 token
+     * @return 用户的文件信息列表
+     */
+    @GetMapping("/file-info")
+    @ApiOperation("根据 token 获取用户的文件信息")
+    public ResponseEntity<ApiResponse<?>> getUserFiles(@RequestHeader("Authorization") String authorization) {
+        log.info("获取用户文件信息请求，token: {}", authorization);
+
+        // 去除 Bearer 前缀
+        String token = authorization.replace("Bearer ", "").trim();
+
+
+        // 解析 token 获取 user_id
+        Long userId = jwtTokenProvider.getUserIdFromToken(token);
+        if (userId == null) {
+            return ResponseEntity.badRequest().body(ApiResponse.error("无效的 token"));
+        }
+
+        log.info("当前用户 ID: {}", userId);
+
+        // 查询用户的所有文件信息
+        List<FileEntity> files = fileRepository.findByUserId(Math.toIntExact(userId));
+        if (files.isEmpty()) {
+            return ResponseEntity.ok(ApiResponse.success("没有找到文件信息"));
+        }
+
+        // 将文件信息转换为 DTO 或者直接返回
+        List<FileEntity> fileDtos = files.stream()
+                .map(file -> {
+                    FileEntity fileDto = new FileEntity();
+                    fileDto.setId(file.getId());
+                    fileDto.setFileName(file.getFileName());
+                    fileDto.setFileKey(file.getFileKey());
+                    fileDto.setFilePath(file.getFilePath());
+                    fileDto.setFileSize(file.getFileSize());
+                    fileDto.setContentType(file.getContentType());
+                    fileDto.setUserId(file.getUserId());
+                    fileDto.setStatus(file.getStatus());
+                    fileDto.setDescription(file.getDescription());
+                    fileDto.setTags(file.getTags());
+                    fileDto.setDownloadCount(file.getDownloadCount());
+                    fileDto.setPermissions(file.getPermissions());
+                    fileDto.setDataurl(file.getDataurl());
+                    fileDto.setUploadTime(file.getUploadTime());
+                    fileDto.setUpdateTime(file.getUpdateTime());
+                    return fileDto;
+                })
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(ApiResponse.success(fileDtos));
     }
 }

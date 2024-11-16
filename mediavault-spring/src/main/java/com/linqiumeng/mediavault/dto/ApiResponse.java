@@ -27,6 +27,10 @@ public class ApiResponse<T> {
         return new ApiResponse<>(code, message, null);
     }
 
+    public static ApiResponse<?> error(String message) {
+        return new ApiResponse<>(500, message, null);
+    }
+
     // getter 和 setter 方法
 
 
