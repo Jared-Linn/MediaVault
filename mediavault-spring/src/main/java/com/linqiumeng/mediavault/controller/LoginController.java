@@ -1,5 +1,6 @@
 package com.linqiumeng.mediavault.controller;
 
+import com.linqiumeng.mediavault.dto.ApiResponse;
 import com.linqiumeng.mediavault.dto.token.ApiResponseToken;
 import com.linqiumeng.mediavault.dto.LoginRequest;
 import com.linqiumeng.mediavault.entity.User;
@@ -40,5 +41,21 @@ public class LoginController {
         } else {
             return ResponseEntity.status(401).body(ApiResponseToken.failure(401, "Invalid credentials"));
         }
+    }
+
+    /**
+     * 注册方法
+     *
+     * @param loginRequest 注册请求对象
+     * @return ResponseEntity
+     */
+    @PostMapping("/register")
+    public ResponseEntity<ApiResponse<?>> register(@RequestBody LoginRequest loginRequest) {
+        User user = new User();
+        user.setUsername(loginRequest.getUsername());
+        user.setPassword(loginRequest.getPassword());
+        user.setPhone(loginRequest.getPhone());
+        userServiceImpl.save(user);
+        return ResponseEntity.ok(ApiResponse.success("注册成功"));
     }
 }

@@ -12,4 +12,8 @@ public interface UserService  {
     User getUserByNameAndId(String username, Integer id);
 
     Long getIdByUserName(String username);
+
+//    void updateUser(User user);
+//    void deleteUser(Integer id);
+    void save(User user);
 }
