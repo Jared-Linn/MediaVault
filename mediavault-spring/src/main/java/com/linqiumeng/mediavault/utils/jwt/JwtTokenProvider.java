@@ -3,6 +3,8 @@ package com.linqiumeng.mediavault.utils.jwt;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.linqiumeng.mediavault.service.User.UserServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -17,7 +19,8 @@ public class JwtTokenProvider {
     @Value("${jwt.EXPIRATION_TIME}")
     private long EXPIRATION_TIME;
 
-
+    @Autowired
+    private UserServiceImpl userServiceImpl;
     /**
      * 生成包含用户ID的JWT
      *
@@ -70,11 +73,14 @@ public class JwtTokenProvider {
                     .asLong();
         } catch (JWTVerificationException e) {
             System.out.println("Error occurred while verifying JWT: " + e.getMessage());
-
             return null;
         }
     }
 
+    // 用户名获取用户ID
+    public Long getUserIdFromUsername(String username) {
+        return  userServiceImpl.getIdByUserName(username);
+    }
 
     /**
      * 验证JWT的有效性
@@ -87,6 +93,6 @@ public class JwtTokenProvider {
         Long extractedUserId = getUserIdFromToken(token);
         System.out.println("Extracted username: " + extractedUsername);
         System.out.println("Extracted extractedUserId: " + extractedUserId);
-        return extractedUsername == null || extractedUserId == null;
+        return extractedUsername != null && extractedUserId != null;
     }
 }
