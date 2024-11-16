@@ -95,7 +95,7 @@
     </div>
   </div>
 </template>
-'@vue/runtime-core'
+
 
 <script setup lang="ts">
 import { reactive, ref } from '@vue/runtime-core'
@@ -153,7 +153,7 @@ const router = useRouter()
 const login = async () => {
   try {
     const response = await axios.post('/api/login', {
-      username: loginForm.username,
+      username: loginForm["username"],
       password: loginForm.password,
     })
 
@@ -217,6 +217,7 @@ const register = async () => {
   }
 }
 </script>
+
 
 
 
