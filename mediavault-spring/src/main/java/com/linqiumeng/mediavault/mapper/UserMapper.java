@@ -84,5 +84,6 @@ public interface UserMapper extends BaseMapper<User> {
             "</script>")
     int getTotalUserCountByConditions(UserQueryParams params);
 
-
+    @Select("SELECT id FROM `user` WHERE username = #{username}")
+    Long getIdByUserName(String username);
 }
