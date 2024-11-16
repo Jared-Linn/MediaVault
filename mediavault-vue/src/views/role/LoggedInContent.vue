@@ -1,13 +1,13 @@
-<template>
+<template >
   <el-skeleton :loading="loading" animated>
     <template #template>
       <div class="skeleton-item">
-        <el-skeleton-item variant="image" style="width: 200px; height: 200px;" />
+        <el-skeleton-item variant="image" style="width: 200px; height: 200px;"/>
         <div style="padding: 14px;">
-          <el-skeleton-item variant="h3" style="width: 50%;" />
+          <el-skeleton-item variant="h3" style="width: 50%;"/>
           <div style="display: flex; align-items: center; justify-content: space-between;">
-            <el-skeleton-item variant="text" style="margin-right: 16px;" />
-            <el-skeleton-item variant="text" style="width: 32px;" />
+            <el-skeleton-item variant="text" style="margin-right: 16px;"/>
+            <el-skeleton-item variant="text" style="width: 32px;"/>
           </div>
         </div>
       </div>
@@ -15,7 +15,7 @@
     <template #default>
       <!-- 实际内容 -->
       <div v-if="!loading">
-        <img src="../../assets/img/1.jpg" alt="Image" style="width: 200px; height: 200px;" />
+        <img src="../../assets/img/1.jpg" alt="Image" style="width: 200px; height: 200px;"/>
         <div style="padding: 14px;">
           <h3>Title</h3>
           <div style="display: flex; align-items: center; justify-content: space-between;">
@@ -23,17 +23,27 @@
             <p>Price</p>
           </div>
         </div>
+        <UploadFile/>
+        <MediaDisplay/>
+
       </div>
     </template>
   </el-skeleton>
 </template>
 
-<script>
+<script lang="ts">
+import UploadFile from '@/views/sys/Uploadfile.vue';
+import MediaDisplay from '@/views/role/file/MediaDisplay.vue';
+
 export default {
   data() {
     return {
       loading: true
     };
+  },
+  components:{
+    MediaDisplay,
+    UploadFile
   },
   mounted() {
     // 模拟数据加载

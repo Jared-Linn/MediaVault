@@ -12,12 +12,6 @@
     <el-button class="ml-3" type="success" @click="submitUpload">
       upload to server
     </el-button>
-
-<!--    <template #tip>-->
-<!--      <div class="el-upload__tip">-->
-<!--        jpg/png files with a size less than 500kb-->
-<!--      </div>-->
-<!--    </template>-->
   </el-upload>
 </template>
 

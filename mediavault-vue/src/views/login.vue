@@ -207,6 +207,10 @@ const register = async () => {
       registerForm.username = ''
       registerForm.password = ''
       registerForm.confirmPassword = ''
+      // 刷新页面
+      location.reload()
+
+
     } else {
       console.error('注册失败:', response.data.message)
       ElMessage.error(response.data.message)
