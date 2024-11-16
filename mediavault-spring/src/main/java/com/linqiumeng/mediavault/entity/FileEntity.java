@@ -1,111 +1,80 @@
 package com.linqiumeng.mediavault.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
+
+import java.time.Instant;
 import java.util.Date;
 
+@Setter
+@Getter
 @Entity
 @Table(name = "files")
 public class FileEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
     private Integer id;
 
-    @Column(nullable = false, length = 255)
+
     private String fileName;
 
-    @Column(nullable = false, length = 255)
+    @Size(max = 255)
+    @Column(name = "file_key")
     private String fileKey;
 
-    @Column(nullable = false)
+    @Size(max = 255)
+    @Column(name = "file_path")
+    private String filePath;
+
+    @Column(name = "file_size")
     private Long fileSize;
 
-    @Column(nullable = false, length = 255)
+    @Size(max = 255)
+    @Column(name = "content_type")
     private String contentType;
 
-    @Column(nullable = false, updatable = false, insertable = false, columnDefinition = "datetime default current_timestamp")
-    private Date uploadTime;
-
-    @Column(nullable = false)
+    @Column(name = "user_id")
     private Integer userId;
 
-    @Column(nullable = false, length = 50)
+    @Size(max = 50)
+    @ColumnDefault("'uploaded'")
+    @Column(name = "status", length = 50)
     private String status;
 
-    @Column(nullable = false, length = 100)
+    @Size(max = 100)
+    @Column(name = "dataurl", length = 100)
     private String dataurl;
 
-    // Getters and Setters
+    @Lob
+    @Column(name = "description")
+    private String description;
 
-    public Integer getId() {
-        return id;
-    }
+    @Size(max = 255)
+    @Column(name = "tags")
+    private String tags;
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+    @ColumnDefault("0")
+    @Column(name = "download_count")
+    private Integer downloadCount;
 
-    public String getFileName() {
-        return fileName;
-    }
+    @Size(max = 255)
+    @ColumnDefault("'public'")
+    @Column(name = "permissions")
+    private String permissions;
 
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
-    }
+    @NotNull
+    @ColumnDefault("CURRENT_TIMESTAMP")
+    @Column(name = "upload_time", nullable = false)
+    private Instant uploadTime;
 
-    public String getFileKey() {
-        return fileKey;
-    }
+    @ColumnDefault("CURRENT_TIMESTAMP")
+    @Column(name = "update_time")
+    private Instant updateTime;
 
-    public void setFileKey(String fileKey) {
-        this.fileKey = fileKey;
-    }
-
-    public Long getFileSize() {
-        return fileSize;
-    }
-
-    public void setFileSize(Long fileSize) {
-        this.fileSize = fileSize;
-    }
-
-    public String getContentType() {
-        return contentType;
-    }
-
-    public void setContentType(String contentType) {
-        this.contentType = contentType;
-    }
-
-    public Date getUploadTime() {
-        return uploadTime;
-    }
-
-    public void setUploadTime(Date uploadTime) {
-        this.uploadTime = uploadTime;
-    }
-
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public String getDataurl() {
-        return dataurl;
-    }
-
-    public void setDataurl(String dataurl) {
-        this.dataurl = dataurl;
-    }
 }
