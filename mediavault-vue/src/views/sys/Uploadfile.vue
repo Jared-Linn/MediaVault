@@ -22,8 +22,9 @@
 </template>
 
 <script lang="ts" setup>
-import  { ref } from '@vue/runtime-core'
+import { ref } from '@vue/runtime-core'
 import type { UploadInstance, UploadFile } from 'element-plus'
+import axios from 'axios'
 
 const uploadRef = ref<UploadInstance>()
 const fileList = ref<UploadFile[]>([])
@@ -48,22 +49,18 @@ const submitUpload = async () => {
   })
 
   try {
-    const response = await fetch('/api/admin/common/upload', {
-      method: 'POST',
+    const response = await axios.post('/api/admin/common/upload', formData, {
       headers: {
         'Content-Type': 'multipart/form-data'
-      },
-      body: formData,
+      }
     })
 
-    if (response.ok) {
-      const result = await response.json()
-      console.log('上传成功:', result)
+    if (response.status === 200) {
+      console.log('上传成功:', response.data)
       alert('文件上传成功')
     } else {
-      const errorData = await response.json()
-      console.error('上传失败:', errorData.message || response.statusText)
-      alert('文件上传失败: ' + (errorData.message || response.statusText))
+      console.error('上传失败:', response.data.message || response.statusText)
+      alert('文件上传失败: ' + (response.data.message || response.statusText))
     }
   } catch (error) {
     console.error('请求出错:', error)
